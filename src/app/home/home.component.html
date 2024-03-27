@@ -1,0 +1,186 @@
+<ngx-spinner
+  bdColor="rgba(51,51,51,0.8)"
+  size="medium"
+  color="#fff"
+  type="ball-scale-multiple"
+>
+  <p style="font-size: 20px; color: white">Cargando...</p>
+</ngx-spinner>
+
+<div class="contenedor">
+
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-10">
+      <h3 style="text-align: center;text-shadow: 5px 5px 10px rgb(118, 118, 118);">
+        Ingresa tus Datos para saber cuanto debes pagar.
+      </h3>
+  
+    </div>
+  
+  </div>
+<form [formGroup]="miFormulario" (ngSubmit)="onSubmit()">
+  <div class="row justify-content-center">
+    <div class="col-lg-4 col-10 my-4" *ngIf="habilitatecladovirtual == false">
+      <div class="card w-100">
+        <div class="card-body">
+          <div class="row justify-content-center">
+            <div class="col-lg-12 col-md-12 col-10 my-2">
+           
+              <p style="text-align: center; color: grey; font-weight: 400;">
+                Termina de pagar sin interés a la mora hasta diciembre del 2023
+              </p>
+            </div>
+          </div>
+          <!-- <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-11">
+              <div class="my-4">
+                <select
+                  class="form-select"
+                  aria-label="Default select example "
+                  formControlName="fcntipo"
+                 
+                >
+              
+                  <option disabled selected value="Seleccionar tipo">TIPO DE DOCUMENTO</option>
+                  <option value="CEDULA">CEDULA</option>
+                  <option value="CIU">CIU</option>
+                </select>
+              </div>
+            </div>
+          </div> -->
+          <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-11">
+                <label
+                for="exampleInputEmail1"
+                class="my-2"
+                style="color: rgb(0, 0, 0); font-weight: 400"
+                >Ingrese la cédula</label>
+              <div class="my-2">
+                <input
+                  type="number"
+                  id="inputValue"
+                  formControlName="fcncedula"
+                  class="form-control"
+                  placeholder="Ingrese"
+                  aria-label="Ingrese"
+                  aria-describedby="basic-addon1"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-11 my-2">
+              <button
+                class="button w-100"
+                style="vertical-align: middle"
+                (click)="consultar()"
+              >
+                <span>Consultar </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="row justify-content-center p-2" *ngIf="aparecetabla">
+    <div
+      class="col-lg-10 col-10"
+      style="background-color: rgb(255, 255, 255, 0.9)"
+    >
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              
+
+              <th scope="col" style="font-weight: 500;text-align: justify;">Año</th>
+              <th scope="col"  style="font-weight: 500;text-align: justify;">Descripcion</th>
+              <th scope="col"  style="font-weight: 500;text-align: justify;">Interes</th>
+              <th scope="col"  style="font-weight: 500;text-align: justify;">Subtotal</th>
+              <th scope="col"  style="font-weight: 500;text-align: justify;">Subtotal+interes</th>
+        
+       
+              <th scope="col"  style="font-weight: 500;text-align: justify;">R. Interes</th>
+              <th scope="col"  style="font-weight: 500;text-align: justify;">R. Multa</th>
+              <th scope="col"  style="font-weight: 500;text-align: justify;">R. Recargo</th>
+              <th scope="col"  style="font-weight: 500;text-align: justify;">T. Remision</th>
+          
+              <th scope="col"  style="font-weight: 500;text-align: justify;">Total a Pagar</th>
+           
+              <th scope="col"  style="font-weight: 500;text-align: justify;"> </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let contador of arrayRespuesta; let i = index">
+             
+              <td  style="font-weight: 100;text-align: justify;">{{ contador["anio"] }}</td>
+              <td  style="font-weight: 100;text-align: justify;">{{ contador["impuesto"] }}</td>
+              <td  style="font-weight: 100;text-align: justify;">{{ contador["interes"]}}</td>
+              <td  style="font-weight: 100;text-align: justify;">{{ (contador["emision"]+contador["iva"]+contador["coactiva"]+ contador["recargo"]+ contador["vespecie"]).toFixed(2)}}</td>
+            
+              <td  style="font-weight: 100;text-align: justify;">{{ ((contador["emision"]+contador["iva"]+contador["coactiva"]+ contador["recargo"]+ contador["vespecie"])+ contador["interes"]).toFixed(2)}}</td>
+
+              <td  style="font-weight: 100;text-align: justify;">{{ contador["reminteres"]}}</td>
+              <td  style="font-weight: 100;text-align: justify;">{{ contador["remmultas"]}}</td>
+              <td  style="font-weight: 100;text-align: justify;">{{ contador["remrecargo"]}}</td>
+              <td style="font-weight: 100;text-align: justify;">{{ (contador["reminteres"]+contador["remmultas"]+contador["remrecargo"]).toFixed(2)}}</td> 
+           
+              <td  style=" color:green;font-weight: 100;text-align: justify;">{{ (((contador["emision"]+contador["iva"]+contador["coactiva"]+ contador["recargo"]+ contador["vespecie"])+ contador["interes"])-(contador["descuento"]+contador["reminteres"]+contador["remmultas"]+contador["remrecargo"])).toFixed(2)}}</td>
+
+          
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td style="font-weight: 500; font-size: 12pt">TOTAL SIN REMISIÓN:</td>
+              <td style="font-weight: 500; font-size: 12pt;color: red;">{{ totalsinremision.toFixed(2) }}</td>
+            
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td style="font-weight: 500; font-size: 12pt">BENEFICIO DE LA ORDENANZA REMISIÓN:</td>
+              <td style="font-weight: 500; font-size: 12pt;color: green;">{{ totalremisiones.toFixed(2) }}</td>
+            
+            </tr>
+          
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td style="font-weight: 500; font-size: 12pt">TOTAL A PAGAR:</td>
+              <td style="font-weight: 500; font-size: 12pt;color: blue;">{{ totalconremision.toFixed(2) }}</td>
+            
+            </tr>
+           
+          </tbody>
+        </table>
+        
+       
+      </div>
+    </div>
+  </div>
+</form> 
+</div>
